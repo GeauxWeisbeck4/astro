@@ -1,5 +1,53 @@
 # astro
 
+## 2.1.8
+
+### Patch Changes
+
+- [#6675](https://github.com/withastro/astro/pull/6675) [`1f783e320`](https://github.com/withastro/astro/commit/1f783e32075c20b13063599696644f5d47b75d8d) Thanks [@matthewp](https://github.com/matthewp)! - Prevent frontmatter errors from crashing the dev server
+
+- [#6653](https://github.com/withastro/astro/pull/6653) [`7c439868a`](https://github.com/withastro/astro/commit/7c439868a3bc7d466418da9af669966014f3d9fe) Thanks [@bholmesdev](https://github.com/bholmesdev)! - Simplify Markdoc configuration with a new `markdoc.config.mjs` file. This lets you import Astro components directly to render as Markdoc tags and nodes, without the need for the previous `components` property. This new configuration also unlocks passing variables to your Markdoc from the `Content` component ([see the new docs](https://docs.astro.build/en/guides/integrations-guide/markdoc/#pass-markdoc-variables)).
+
+  ## Migration
+
+  Move any existing Markdoc config from your `astro.config` to a new `markdoc.config.mjs` file at the root of your project. This should be applied as a default export, with the optional `defineMarkdocConfig()` helper for autocomplete in your editor.
+
+  This example configures an `aside` Markdoc tag. Note that components should be imported and applied to the `render` attribute _directly,_ instead of passing the name as a string:
+
+  ```js
+  // markdoc.config.mjs
+  import { defineMarkdocConfig } from '@astrojs/markdoc/config';
+  import Aside from './src/components/Aside.astro';
+
+  export default defineMarkdocConfig({
+    tags: {
+      aside: {
+        render: Aside,
+      },
+    },
+  });
+  ```
+
+  You should also remove the `components` prop from your `Content` components. Since components are imported into your config directly, this is no longer needed.
+
+  ```diff
+  ---
+  - import Aside from '../components/Aside.astro';
+  import { getEntryBySlug } from 'astro:content';
+
+  const entry = await getEntryBySlug('docs', 'why-markdoc');
+  const { Content } = await entry.render();
+  ---
+
+  <Content
+  - components={{ Aside }}
+  />
+  ```
+
+- [#6639](https://github.com/withastro/astro/pull/6639) [`25cd3e574`](https://github.com/withastro/astro/commit/25cd3e574999c1c7294a089ad8c39df27ccdbf17) Thanks [@tony-sull](https://github.com/tony-sull)! - Fixes an attribute naming mismatch in the definition for <link> elements in astro.JSX
+
+- [#6643](https://github.com/withastro/astro/pull/6643) [`fc0ed9c53`](https://github.com/withastro/astro/commit/fc0ed9c53cd374860bbdb2503318a55ca09a2662) Thanks [@Princesseuh](https://github.com/Princesseuh)! - Fix images not having the proper path when using `base`
+
 ## 2.1.7
 
 ### Patch Changes
